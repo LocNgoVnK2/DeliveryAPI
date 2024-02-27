@@ -9,8 +9,9 @@ namespace WebApi
         public Mapping()
         {
             // account
-            CreateMap<Accounts, User>().ReverseMap();
-            
+            CreateMap<Accounts, UserVM>().ReverseMap();
+            CreateMap<CheckOutVM,CheckOut>().ReverseMap();
+            CreateMap<DeliveryDetailVM,DeliveryDetail>().ReverseMap();
         }
     }
 }

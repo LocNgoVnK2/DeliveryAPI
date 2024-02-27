@@ -29,7 +29,7 @@ public class AuthorizeAttribute : Attribute, IAuthorizationFilter
 
     public void OnAuthorization(AuthorizationFilterContext context)
     {
-        var user = (User)context.HttpContext.Items["User"];
+        var user = (UserVM)context.HttpContext.Items["User"];
 
         // Check if authentication is required
         if (_requireAuthentication && user == null)

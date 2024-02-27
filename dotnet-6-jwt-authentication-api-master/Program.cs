@@ -21,7 +21,24 @@ var builder = WebApplication.CreateBuilder(args);
     services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
 
     // configure DI for application services
-    services.AddScoped<IUserService, UserService>();
+    services.AddScoped<IUserService, UserApplicationService>();
+
+    //Order
+    services.AddScoped<IOrderRepository, OrderRepository>();
+    services.AddScoped<IOrderService, OrderService>();
+
+    // customer
+    services.AddScoped<ICustomerRepository, CustomerRepository>();
+    services.AddScoped<ICustomerService, CustomerService>();
+
+    //checkout 
+    services.AddScoped<ICheckOutRepository, CheckOutRepository>();
+    services.AddScoped<ICheckOutService, CheckOutService>();
+    //DeliveryDetail
+    services.AddScoped<IDeliveryDetailService, DeliveryDetailService>();
+    services.AddScoped<IDeliveryDetailRepository, DeliveryDetailRepository>();
+
+
 
     services.AddDbContext<EXDbContext>(options =>
     {
@@ -42,7 +59,9 @@ var app = builder.Build();
         .AllowAnyOrigin()
         .AllowAnyMethod()
         .AllowAnyHeader());
-
+    app.UseRouting();
+    app.UseAuthentication();
+    app.UseAuthorization();
     // custom jwt auth middleware
     app.UseMiddleware<JwtMiddleware>();
 

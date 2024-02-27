@@ -17,25 +17,16 @@ using WebApi.Models;
 public interface IUserService
 {
     Task<AuthenticateResponse> AuthenticateAsync(AuthenticateRequest model);
-    Task<IEnumerable<User>> GetAllAsync();
-    Task<User> GetByIdAsync(int id);
+    Task<IEnumerable<UserVM>> GetAllAsync();
+    Task<UserVM> GetByIdAsync(int id);
 }
 
-public class UserService : IUserService
+public class UserApplicationService : IUserService
 {
-    // users hardcoded for simplicity, store in a db with hashed passwords in production applications
-    /*
-    private List<User> _users = new List<User>
-    {
-        new User { Id = 1, Username = "test", Password = "test" }
-    };
-    */
-    
-
     private readonly AppSettings _appSettings;
     private readonly IAccountsService _accountService;
     private readonly IMapper _mapper;
-    public UserService(IOptions<AppSettings> appSettings, IAccountsService accountsService,IMapper mapper)
+    public UserApplicationService(IOptions<AppSettings> appSettings, IAccountsService accountsService,IMapper mapper)
     {
         _appSettings = appSettings.Value;
         _accountService = accountsService;
@@ -45,10 +36,8 @@ public class UserService : IUserService
     public async Task<AuthenticateResponse> AuthenticateAsync(AuthenticateRequest model)
     {
         var _users = await _accountService.GetAccounts();
-        User userLogin = new User();
-        /*
-        var userExist = _users.SingleOrDefault(x => x.Username == model.Username && x.Password == model.Password);
-        */
+        UserVM userLogin = new UserVM();
+    
         Accounts user = _users.Where(e => e.Username == model.Username).FirstOrDefault();
         if (user != null && BCrypt.Net.BCrypt.Verify(model.Password, user.Password) && user.IsActivate == true)
         {
@@ -56,6 +45,7 @@ public class UserService : IUserService
             userLogin.AccountID = (int)user.AccountID;
             userLogin.Password = user.Password;
             userLogin.Role = user.Role;
+            userLogin.IdStore = user.IdStore;
         }
         else
         {
@@ -67,18 +57,18 @@ public class UserService : IUserService
         return new AuthenticateResponse(userLogin, token);
     }
 
-    public async Task<IEnumerable<User>> GetAllAsync()
+    public async Task<IEnumerable<UserVM>> GetAllAsync()
     {
         var _listusers = await _accountService.GetAccounts();
-        List<User> _users = new List<User>();
-        _users = _mapper.Map<List<User>>(_listusers);
+        List<UserVM> _users = new List<UserVM>();
+        _users = _mapper.Map<List<UserVM>>(_listusers);
         return _users;
     }
 
-    public async Task<User> GetByIdAsync(int id)
+    public async Task<UserVM> GetByIdAsync(int id)
     {
         var _userRes = await _accountService.GetAccount(id);
-        User user = new User() { 
+        UserVM user = new UserVM() { 
             AccountID = (int)_userRes.AccountID,
             Username = _userRes.Username,
             Password = _userRes.Password,
@@ -89,7 +79,7 @@ public class UserService : IUserService
 
     // helper methods
 
-    private string generateJwtToken(User user)
+    private string generateJwtToken(UserVM user)
     {
      
         var tokenHandler = new JwtSecurityTokenHandler();

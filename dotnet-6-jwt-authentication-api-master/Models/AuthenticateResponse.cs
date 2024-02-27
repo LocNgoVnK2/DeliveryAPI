@@ -11,8 +11,8 @@ public class AuthenticateResponse
     public string Token { get; set; }
     public string Role { get; set; }
 
-
-    public AuthenticateResponse(User user, string token)
+    public int IdStore { get; set; }
+    public AuthenticateResponse(UserVM user, string token)
     {
         AccountID = user.AccountID;
         //FirstName = user.FirstName;
@@ -20,5 +20,6 @@ public class AuthenticateResponse
         Username = user.Username;
         Role = user.Role;
         Token = token;
+        IdStore = (int)user.IdStore;
     }
 }
