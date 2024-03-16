@@ -27,7 +27,7 @@ public class UsersController : ControllerBase
         return Ok(response);
     }
 
-    [Authorize]
+    //[Authorize]
     //[Authorize(role: "1")]
     [HttpGet]
     public async Task<IActionResult> GetAll()

@@ -12,6 +12,7 @@ namespace Infrastructure.Service
     {
         Task<IQueryable<DeliveryDetail>> GetDeliveryDetails();
         Task<DeliveryDetail> GetDeliveryDetail(int id);
+        Task<List<DeliveryDetail>> GetDeliveryDetailCompleteByAccountId(int id);
         Task InsertDeliveryDetail(DeliveryDetail deliveryDetail);
         Task UpdateDeliveryDetail(DeliveryDetail deliveryDetail);
         Task DeleteDeliveryDetail(DeliveryDetail deliveryDetail);
@@ -35,7 +36,12 @@ namespace Infrastructure.Service
         {
             return await deliveryDetailRepository.GetByIdAsync(id);
         }
-
+        public async Task<List<DeliveryDetail>> GetDeliveryDetailCompleteByAccountId(int id)
+        {
+            var res = await Task.FromResult(deliveryDetailRepository.GetAll());
+            List<DeliveryDetail> deliveryDetail = res.Where(e=>e.AccountID == id && e.DeliveryStatus == true).ToList();
+            return deliveryDetail;
+        }
         public async Task InsertDeliveryDetail(DeliveryDetail deliveryDetail)
         {
             await deliveryDetailRepository.InsertAsync(deliveryDetail);

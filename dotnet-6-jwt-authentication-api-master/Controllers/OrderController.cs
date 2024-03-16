@@ -5,12 +5,14 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Transactions;
 using WebApi.Entities;
+using WebApi.Helpers;
 using WebApi.Models;
 
 namespace WebApi.Controllers
 {
     [Route("[controller]")]
     [ApiController]
+    [Authorize(role: "3")]
     public class OrderController : ControllerBase
     {
         private readonly IMapper _mapper;
@@ -81,8 +83,8 @@ namespace WebApi.Controllers
         }
         // delicery id == null có nghĩa là đơn này chưa dc pick bởi shipper nào 
         // nếu đã dc pick tạo cột bên delivery detail và set lại và set thêm id vào ordeer và set lại time received, khi complete thì them hinh va time complte va set status =1 
-        [HttpPost("PickupOrder")]
-        public async Task<IActionResult> PickupOrder(int AccountId, int orderId) // load ở view chop nhan vien hoan thanh dơn hang
+        [HttpGet("PickupOrder")]
+        public async Task<IActionResult> PickupOrder(int AccountId, int OrderId) // load ở view chop nhan vien hoan thanh dơn hang
         {
 
             using (var transactionScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
@@ -98,7 +100,7 @@ namespace WebApi.Controllers
                     };
 
                     await _detailService.InsertDeliveryDetail(deliveryDetail);
-                    Order order = await _orderService.GetOrder(orderId);
+                    Order order = await _orderService.GetOrder(OrderId);
                     order.DeliveryId = deliveryDetail.DeliveryId;
                     await _orderService.UpdateOrder(order);
                     transactionScope.Complete();
@@ -129,6 +131,58 @@ namespace WebApi.Controllers
             }catch (Exception ex)
             {
                 return StatusCode(500, "An error occurred while processing the request. :"+ ex);
+            }
+
+        }
+
+        [HttpGet("GetCompletedOrderByUserId")]
+        public async Task<IActionResult> GetCompletedOrderByUserId(int AccountId) 
+        {
+            try
+            {
+                List<CheckOutBillViewModel> checkOutViewModels = new List<CheckOutBillViewModel>();
+                var listDeliveryDetail = await _detailService.GetDeliveryDetailCompleteByAccountId(AccountId);
+                var orders = await _orderService.GetOrders();
+
+
+                foreach (var deliveryDetail in listDeliveryDetail)
+                {
+                    Order order = orders.FirstOrDefault(e=>e.DeliveryId == deliveryDetail.DeliveryId);
+                    CheckOut checkOut = new CheckOut();
+                    checkOut = null;
+                    if (order != null) { checkOut = await _checkOutService.GetCheckOut((int)order.OrderID);}
+
+                    if (checkOut != null)
+                    {
+                        Customer customer = await _customerService.GetCustomer((int)checkOut.CustomerId);
+                        CheckOutBillViewModel checkOutView = new CheckOutBillViewModel()
+                        {
+
+                            IdOrder = checkOut.IdOrder,
+                            IsReceived = checkOut.IsReceived,
+                            TotalPrice = order.TotalAmount + order.ShippingFee,
+                            OrderDate = order.OrderDate,
+                            PhoneNumber = customer.PhoneNumber,
+                            Address = customer.Address,
+                            FirstName = customer.FirstName + " " + customer.LastName,
+                            IdStore = order.IdStore,
+                            Note = checkOut.Note,
+                            PaymentStatus = (bool)order.PaidStatus,
+                            DeliveryId = order.DeliveryId,
+                            ShippingFee = order.ShippingFee,
+
+                        };
+                        checkOutViewModels.Add(checkOutView);
+
+                    }
+
+                }
+
+                return Ok(checkOutViewModels);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while processing the request. :" + ex);
             }
 
         }

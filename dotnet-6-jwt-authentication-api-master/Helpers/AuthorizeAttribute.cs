@@ -31,7 +31,6 @@ public class AuthorizeAttribute : Attribute, IAuthorizationFilter
     {
         var user = (UserVM)context.HttpContext.Items["User"];
 
-        // Check if authentication is required
         if (_requireAuthentication && user == null)
         {
             // not logged in
@@ -39,10 +38,9 @@ public class AuthorizeAttribute : Attribute, IAuthorizationFilter
             return;
         }
 
-        // Check if role-based authorization is required
         if (_role != "" && (user == null || user.Role != _role))
         {
-            // doesn't have the required role
+
             context.Result = new JsonResult(new { message = "Forbidden" }) { StatusCode = StatusCodes.Status403Forbidden };
             return;
         }
