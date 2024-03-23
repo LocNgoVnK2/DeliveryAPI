@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "JqQavhgH9wAK92uwJA3yPQCmaxTLx670/PpzXJf61uDRDed0LK4tf5zTZgbjC1GQ8imdGtThNtweJj8slX/qqA==",
+  "dgSpecHash": "v3sfVJTdHSnnuToiPuNhz8IPCSMwMKCNCFQnFXnBUskdl2CUQI+aMB/57Dmo7Cvp+glX6hq5fb5pnO2ZVc7pfw==",
   "success": true,
-  "projectFilePath": "D:\\.netSave\\dotnet-6-jwt-authentication-api-master\\dotnet-6-jwt-authentication-api-master\\WebApi.csproj",
+  "projectFilePath": "D:\\.netSave\\KhoaLuanTotNghiep\\WebApiModule\\dotnet-6-jwt-authentication-api-master\\dotnet-6-jwt-authentication-api-master\\WebApi.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\a\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
     "C:\\Users\\a\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.1\\automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",

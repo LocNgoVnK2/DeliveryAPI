@@ -2070,11 +2070,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\.netSave\\dotnet-6-jwt-authentication-api-master\\dotnet-6-jwt-authentication-api-master\\WebApi.csproj",
+      "projectUniqueName": "D:\\.netSave\\KhoaLuanTotNghiep\\WebApiModule\\dotnet-6-jwt-authentication-api-master\\dotnet-6-jwt-authentication-api-master\\WebApi.csproj",
       "projectName": "WebApi",
-      "projectPath": "D:\\.netSave\\dotnet-6-jwt-authentication-api-master\\dotnet-6-jwt-authentication-api-master\\WebApi.csproj",
+      "projectPath": "D:\\.netSave\\KhoaLuanTotNghiep\\WebApiModule\\dotnet-6-jwt-authentication-api-master\\dotnet-6-jwt-authentication-api-master\\WebApi.csproj",
       "packagesPath": "C:\\Users\\a\\.nuget\\packages\\",
-      "outputPath": "D:\\.netSave\\dotnet-6-jwt-authentication-api-master\\dotnet-6-jwt-authentication-api-master\\obj\\",
+      "outputPath": "D:\\.netSave\\KhoaLuanTotNghiep\\WebApiModule\\dotnet-6-jwt-authentication-api-master\\dotnet-6-jwt-authentication-api-master\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -2096,8 +2096,8 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "projectReferences": {
-            "D:\\.netSave\\dotnet-6-jwt-authentication-api-master\\Infrastructure\\Infrastructure.csproj": {
-              "projectPath": "D:\\.netSave\\dotnet-6-jwt-authentication-api-master\\Infrastructure\\Infrastructure.csproj"
+            "D:\\.netSave\\KhoaLuanTotNghiep\\WebApiModule\\dotnet-6-jwt-authentication-api-master\\Infrastructure\\Infrastructure.csproj": {
+              "projectPath": "D:\\.netSave\\KhoaLuanTotNghiep\\WebApiModule\\dotnet-6-jwt-authentication-api-master\\Infrastructure\\Infrastructure.csproj"
             }
           }
         }

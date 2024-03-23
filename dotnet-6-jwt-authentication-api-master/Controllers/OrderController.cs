@@ -39,7 +39,7 @@ namespace WebApi.Controllers
             _detailService = detailService;
         }
         [HttpGet("GetOrderNeedToShip")]
-        public async Task<IActionResult> GetOrderNeedToShip(int IdStoreofShipper) // load ở view chop nhan vien hoan thanh dơn hang
+        public async Task<IActionResult> GetOrderNeedToShip(int IdStoreofShipper) // load ở view chop nhan vien hoan thanh dơn hang( các order chưa được pick theo từng cơ sở)
 
         {
 
@@ -123,11 +123,13 @@ namespace WebApi.Controllers
             // Bug mất dât cũ khi update
             try
             {
-                DeliveryDetail deliveryDetail = _mapper.Map<DeliveryDetail>(deliveryDetailVM);
+               
+                var deliveryDetail = await _detailService.GetDeliveryDetail(deliveryDetailVM.DeliveryId);
                 deliveryDetail.DeliveryStatus = true;
                 deliveryDetail.TimeComplete = DateTime.Now;
+                deliveryDetail.PickUpPhoto = Convert.FromBase64String(deliveryDetailVM.PickUpPhoto);
                 await _detailService.UpdateDeliveryDetail(deliveryDetail);
-                return Ok();
+                return Ok("Updated");
             }catch (Exception ex)
             {
                 return StatusCode(500, "An error occurred while processing the request. :"+ ex);
@@ -141,7 +143,7 @@ namespace WebApi.Controllers
             try
             {
                 List<CheckOutBillViewModel> checkOutViewModels = new List<CheckOutBillViewModel>();
-                var listDeliveryDetail = await _detailService.GetDeliveryDetailCompleteByAccountId(AccountId);
+                var listDeliveryDetail = await _detailService.GetDeliveryDetailCompletedByAccountId(AccountId);
                 var orders = await _orderService.GetOrders();
 
 
@@ -151,6 +153,64 @@ namespace WebApi.Controllers
                     CheckOut checkOut = new CheckOut();
                     checkOut = null;
                     if (order != null) { checkOut = await _checkOutService.GetCheckOut((int)order.OrderID);}
+
+                    if (checkOut != null)
+                    {
+                        Customer customer = await _customerService.GetCustomer((int)checkOut.CustomerId);
+                        CheckOutBillViewModel checkOutView = new CheckOutBillViewModel()
+                        {
+
+                            IdOrder = checkOut.IdOrder,
+                            IsReceived = checkOut.IsReceived,
+                            TotalPrice = order.TotalAmount + order.ShippingFee,
+                            OrderDate = order.OrderDate,
+                            PhoneNumber = customer.PhoneNumber,
+                            Address = customer.Address,
+                            FirstName = customer.FirstName + " " + customer.LastName,
+                            IdStore = order.IdStore,
+                            Note = checkOut.Note,
+                            PaymentStatus = (bool)order.PaidStatus,
+                            DeliveryId = order.DeliveryId,
+                            ShippingFee = order.ShippingFee,
+
+                        };
+                        checkOutViewModels.Add(checkOutView);
+
+                    }
+
+                }
+
+                return Ok(checkOutViewModels);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while processing the request. :" + ex);
+            }
+
+        }
+
+        [HttpGet("GetOrderInProgressByUserId")]
+        public async Task<IActionResult> GetOrderInProgressByUserId(int AccountId)
+        {
+            try
+            {
+                /*
+                 
+            var orders = await _orderService.GetOrders();
+            orders = orders.Where(e => e.IsDone == true && e.IdStore == IdStoreofShipper && e.DeliveryId == null).Select(e => e);
+
+                 */
+                List<CheckOutBillViewModel> checkOutViewModels = new List<CheckOutBillViewModel>();
+                var listDeliveryDetail = await _detailService.GetDeliveryDetailInProgressByAccountId(AccountId);
+                var orders = await _orderService.GetOrders();
+
+
+                foreach (var deliveryDetail in listDeliveryDetail)
+                {
+                    Order order = orders.FirstOrDefault(e => e.DeliveryId == deliveryDetail.DeliveryId);
+                    CheckOut checkOut = new CheckOut();
+                    checkOut = null;
+                    if (order != null) { checkOut = await _checkOutService.GetCheckOut((int)order.OrderID); }
 
                     if (checkOut != null)
                     {

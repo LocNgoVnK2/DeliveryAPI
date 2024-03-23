@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "fJm2o2KQFpNAgDv/eaBDwPQrlD3yG0Bsf995eoahkjPBJtlmGfQ00X10me2piD/vO1kbb2ghnDia4NAUfNjaJQ==",
+  "dgSpecHash": "6PcinNOWCtsjmxQTyp1laiS4K+XYkxyVaWCa7+zFc1+Sq9u7Ai6eZplWlL7CgtZszxWsCcd4TPzxqKSkZxXV8Q==",
   "success": true,
-  "projectFilePath": "D:\\.netSave\\dotnet-6-jwt-authentication-api-master\\Infrastructure\\Infrastructure.csproj",
+  "projectFilePath": "D:\\.netSave\\KhoaLuanTotNghiep\\WebApiModule\\dotnet-6-jwt-authentication-api-master\\Infrastructure\\Infrastructure.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\a\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\a\\.nuget\\packages\\microsoft.csharp\\4.5.0\\microsoft.csharp.4.5.0.nupkg.sha512",
