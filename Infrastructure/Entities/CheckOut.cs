@@ -12,6 +12,7 @@ namespace Infrastructure.Entities
     public class CheckOut
     {
         [Key]
+        public int? Id { get; set; }
         public int? IdOrder { get; set; }
         public int? CustomerId { get; set; }
         public string? Note { get; set; }

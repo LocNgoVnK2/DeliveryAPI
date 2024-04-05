@@ -35,7 +35,8 @@ namespace Infrastructure.Service
 
         public async Task<CheckOut> GetCheckOut(int id)
         {
-            return await checkOutRepository.GetByIdAsync(id);
+            // return await checkOutRepository.GetByIdAsync(id);
+            return await checkOutRepository.GetAll().FirstOrDefaultAsync(e => e.IdOrder == id);
         }
 
         public async Task InsertCheckOut(CheckOut checkOut)
